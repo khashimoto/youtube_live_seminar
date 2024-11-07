@@ -1,0 +1,49 @@
+<html lang="ja">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="../common/style.css">
+	<title></title>
+</head>
+<body>
+	<div id="loading" class="flex items-center justify-center inset-0 h-screen">
+		<div class="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+	</div>
+	<section id="main_content" class="hidden">
+		<div id="video_header" class="mx-auto box bg-black grid justify-items-center">
+			<div class="relative max-md:w-full max-md:pt-[56.25%]">
+				<div id="youtube" class="max-md:absolute max-md:top-0 max-md:left-0 max-md:w-full max-md:h-full"></div>
+				<div id="streaming_end" class="max-md:absolute max-md:top-0 max-md:left-0 max-md:w-full max-md:h-full hidden"></div>
+			</div>
+		</div>
+		<div class="mx-auto max-w-screen-md px-2">
+			<div class="my-5">
+				<div class="text-xl font-semibold my-7">
+					<span id="title"></span>
+				</div>
+				<div id="content_wrapper" class="rounded bg-gray-100 p-4 mb-5 hidden">
+					<p id="content"></p>
+				</div>
+				<div class="rounded bg-gray-100 p-4 mb-5">
+					<div class="font-semibold mb-5 text-lg">概要欄</div>
+					<p id="summary"></p>
+				</div>
+			</div>
+		</div>
+		<footer class="mx-auto max-w-screen-md bg-black p-3 text-center">
+			<span class="text-white">Copyright © All Rights Reserved.</span>
+		</footer>
+	</section>
+	<script src="https://unpkg.com/microcms-js-sdk@3.1.2/dist/umd/microcms-js-sdk.js"></script>
+	<script src="../common/youtube_live.js"></script>
+	<script>
+	var setting = [];
+	setting['server_domain'] = 'cb4akru87x';
+	setting['api_key'] = 'mzKe9A7XXcykPOPSzvZuit4i5sroJtEO2fJL';
+	setting['end_point'] = 'test_api';
+	new YoutubeLive(setting);
+	</script>
+</body>
+</html>
