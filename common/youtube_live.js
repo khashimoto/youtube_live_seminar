@@ -43,9 +43,10 @@ class YoutubeLive {
 		// バリデーション
 		if (this.validate() == false) {
 			return;
+		} else {
+			// メイン処理
+			this.main();
 		}
-		// メイン処理
-		this.main();
 	}
 
 	// バリデーション
