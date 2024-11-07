@@ -23,7 +23,7 @@ class YoutubeLive {
 		this.archive_mode = setting.archive_mode || false;
 
 		// オプション
-		this.api_time = setting.api_time || 5000;
+		this.api_time = setting.api_time || 7000;
 		this.youtube_width = setting.youtube_width || 1280;
 		this.youtube_height = setting.youtube_height || 720;
 
@@ -99,8 +99,10 @@ class YoutubeLive {
 			// サイズが変更したら
 			window.addEventListener("resize", this.fixed_header.bind(this));
 
-			// n秒おきにAPI実行
-			setInterval(this.execute.bind(this), this.api_time);
+			// n秒おきにAPI実行（ライブ限定）
+			if (this.archive_mode == false) {
+				setInterval(this.execute.bind(this), this.api_time);
+			}
 		} catch (exception) {
 			console.error("error:", exception.message);
 			return false;
@@ -117,7 +119,7 @@ class YoutubeLive {
 			youtube_parameter['width'] = this.youtube_width;
 			youtube_parameter['height'] = this.youtube_height;
 
-			// ライブの場合
+			// ライブ限定
 			if (this.archive_mode == false) {
 				youtube_parameter['playerVars'] = {};
 				youtube_parameter['playerVars']['controls'] = 0;
@@ -154,13 +156,30 @@ class YoutubeLive {
 			document.querySelector("#content_wrapper").classList.add("hidden");
 		}
 
-		// 配信終了 + ループを止める
-		if (response.streaming_end_flag == true) {
+		// 配信終了 + ループを止める（ライブ限定）
+		if (response.streaming_end_flag == true && this.archive_mode == false) {
 			document.querySelector("#youtube").remove();
 			document.querySelector("#streaming_end").classList.add("text-white", "text-5xl", "py-40", "text-center", "leading-relaxed", "max-md:py-10");
 			document.querySelector("#streaming_end").classList.remove("hidden");
 			document.querySelector("#streaming_end").innerHTML = "配信は<br>終了しました";
 			this.loop_stop_flag = true;
+		}
+
+		// 配信終了（アーカイブ限定）
+		if (response.streaming_end_time != '') {
+			// 日付比較
+			const today = new Date(Date.now());
+			const streaming_end_time = new Date(response.streaming_end_time);
+			if (today >= streaming_end_time) {
+				document.querySelector("#youtube").remove();
+				document.querySelector("#streaming_end").classList.add("text-white", "text-5xl", "py-40", "text-center", "leading-relaxed", "max-md:py-10");
+				document.querySelector("#streaming_end").classList.remove("hidden");
+				document.querySelector("#streaming_end").innerHTML = "配信は<br>終了しました";
+
+				document.querySelector("#message_wrapper").remove();
+				document.querySelector("footer").remove();
+				this.loop_stop_flag = true;
+			}
 		}
 	}
 
@@ -190,14 +209,18 @@ class YoutubeLive {
 		if (this.loop_stop_flag == true) {
 			return;
 		}
-		this.microcms.get({
-			endpoint: this.end_point,
-			contentId: this.content_id,
-			queries: {
-				draftKey: this.draft_key,
-			}
-			// API成功
-		}).then((response) => {
+		// microcmsパラメータ
+		const microcms_parameter = {};
+		microcms_parameter['endpoint'] = this.end_point;
+		microcms_parameter['contentId'] = this.content_id;
+		// 下書き
+		if (this.draft_key != null && this.draft_key) {
+			microcms_parameter['queries'] = {};
+			microcms_parameter['queries']['draftKey'] = this.draft_key;
+		}
+
+		this.microcms.get(microcms_parameter)
+		.then((response) => {
 			this.api_success(response);
 			// APIエラー
 		}).catch((error) => {
