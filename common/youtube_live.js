@@ -43,28 +43,27 @@ class YoutubeLive {
 		// バリデーション
 		if (this.validate() == false) {
 			return;
-		} else {
-			// メイン処理
-			this.main();
 		}
+		// メイン処理
+		this.main();
 	}
 
 	// バリデーション
 	validate() {
 		try {
-			if (typeof this.server_domain == null) {
+			if (this.server_domain == null) {
 				throw new Error("server_domain is null");
 			}
-			if (typeof this.api_key == null) {
+			if (this.api_key == null) {
 				throw new Error("api_key is null");
 			}
-			if (typeof this.end_point == null) {
+			if (this.end_point == null) {
 				throw new Error("end_point is null");
 			}
-			if (typeof this.api_time == null) {
+			if (this.api_time == null) {
 				throw new Error("api_time is null");
 			}
-			if (typeof this.content_id == null) {
+			if (this.content_id == null) {
 				throw new Error("content_id is null");
 			}
 
