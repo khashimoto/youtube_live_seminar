@@ -141,13 +141,6 @@ class YoutubeLive {
 			document.querySelector("#main_content").classList.remove("hidden");
 		}
 
-		// タイトル
-		document.title = response.title;
-		document.querySelector("#title").innerHTML = response.title;
-
-		// 概要
-		document.querySelector("#summary").innerHTML = response.summary;
-
 		// 追加コンテンツを表示
 		if (response.content_view_flag == true && response.content) {
 			document.querySelector("#content").innerHTML = response.content;
